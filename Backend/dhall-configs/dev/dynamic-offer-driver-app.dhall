@@ -361,4 +361,5 @@ in  { esqDBCfg
     , iosValidateEnpoint = "http://localhost:3000/validateIosToken?idToken="
     , quoteRespondCoolDown = +10
     , sosAlertsTopicARN
+    , nammayatriRegistryConfig = common.nammayatriRegistryConfig
     }

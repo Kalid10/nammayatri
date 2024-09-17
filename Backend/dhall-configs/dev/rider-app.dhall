@@ -320,4 +320,5 @@ in  { esqDBCfg
     , isMetroTestTransaction = False
     , urlShortnerConfig = common.urlShortnerConfig
     , sosAlertsTopicARN
+    , nammayatriRegistryConfig = common.nammayatriRegistryConfig
     }
