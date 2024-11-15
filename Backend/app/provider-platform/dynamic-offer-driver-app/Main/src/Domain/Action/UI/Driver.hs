@@ -265,6 +265,7 @@ import Tools.Error
 import Tools.Event
 import qualified Tools.Payout as Payout
 import Tools.SMS as Sms hiding (Success)
+import qualified Tools.Utils as TU
 import Tools.Verification
 import Utils.Common.Cac.KeyNameConstants
 
@@ -336,7 +337,9 @@ data DriverInformationRes = DriverInformationRes
     favCount :: Maybe Int,
     subscriptionEnabledForVehicleCategory :: Bool,
     isSubscriptionEnabledAtCategoryLevel :: Bool,
-    isSpecialLocWarrior :: Bool
+    isSpecialLocWarrior :: Bool,
+    safetyTag :: Maybe DA.Value,
+    safetyScore :: Maybe DA.Value
   }
   deriving (Generic, ToJSON, FromJSON, ToSchema)
 
@@ -390,7 +393,9 @@ data DriverEntityRes = DriverEntityRes
     totalRidesTaken :: Maybe Int,
     subscriptionEnabledForVehicleCategory :: Bool,
     isSubscriptionEnabledAtCategoryLevel :: Bool,
-    isSpecialLocWarrior :: Bool
+    isSpecialLocWarrior :: Bool,
+    safetyTag :: Maybe DA.Value,
+    safetyScore :: Maybe DA.Value
   }
   deriving (Show, Generic, FromJSON, ToJSON, ToSchema)
 
@@ -886,6 +891,9 @@ buildDriverEntityRes (person, driverInfo, driverStats, merchantOpCityId) = do
               return False
             else return driverInfo.onRide
       else return driverInfo.onRide
+  let driverTags = TU.convertTags $ fromMaybe [] person.driverTag
+  let mbDriverSafetyTag = TU.accessKey "SafetyCohort" driverTags
+      mbDriverSafetyScore = TU.accessKey "SafetyScore" driverTags
   return $
     DriverEntityRes
       { id = person.id,
@@ -930,6 +938,8 @@ buildDriverEntityRes (person, driverInfo, driverStats, merchantOpCityId) = do
         payoutVpaBankAccount = driverInfo.payoutVpaBankAccount,
         subscriptionEnabledForVehicleCategory = isEnabledForCategory,
         isSpecialLocWarrior = driverInfo.isSpecialLocWarrior,
+        safetyTag = mbDriverSafetyTag,
+        safetyScore = mbDriverSafetyScore,
         ..
       }
 
