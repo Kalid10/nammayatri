@@ -481,6 +481,8 @@ data Action = NoAction
             | ClickMetroWarriors
             | MetroWarriorPopupAC PopUpModal.Action
             | MetroWarriorSwitchAction SwitchButtonView.Action
+            | HideBusOnline
+            | BusNumber String
 
 uploadFileConfig :: Common.UploadFileConfig
 uploadFileConfig = Common.UploadFileConfig {
@@ -1406,7 +1408,7 @@ eval (RideActiveAction activeRide mbAdvancedRide) state = do
 
 eval RecenterButtonAction state = continue state
 
-eval (SwitchDriverStatus status) state =
+eval (SwitchDriverStatus status) state = do
   if state.data.paymentState.driverBlocked && not state.data.paymentState.subscribed then continue state { props{ subscriptionPopupType = ST.GO_ONLINE_BLOCKER }}
   else if state.data.paymentState.driverBlocked then continue state { data{paymentState{ showBlockingPopup = true}}}
   else if state.data.plansState.cityOrVehicleChanged then continue state {data { plansState { showSwitchPlanModal = true}}}
@@ -1744,6 +1746,12 @@ eval (UpComingRideDetails  resp) state = do
 
 eval ScheduledRideBannerClick state  =  exit $ GoToRideSummaryScreen state
 eval (UpdateRetryRideList retry) state = continue state {props {retryRideList = retry}}
+
+eval HideBusOnline state = continue state { props { setBusOnline = false } }
+
+eval (BusNumber val) state = do
+  let newState = state {data = state.data { bus_number = DS.toUpper val }}
+  continue newState
  
 eval (ParcelIntroductionPopup action) state = do
   let newState = state { props { showParcelIntroductionPopup = false } }

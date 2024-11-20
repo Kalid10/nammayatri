@@ -178,6 +178,7 @@ initData =
       , scheduleRideCount : Nothing
       , blockExpiryTime : ""
       , isSpecialLocWarrior : false
+      , bus_number : ""
     }
   , props:
       { isFreeRide: false
@@ -277,6 +278,8 @@ initData =
       , retryRideList : false
       , showParcelIntroductionPopup : false
       , showMetroWarriorWarningPopup : false
+      , setBusOnline : false
+      , bus_input_data : ""
       }
   }
 
