@@ -131,6 +131,7 @@ dependencies:
   - text-format
   - scientific
   - resource-pool
+  - jwt
 
 ghc-options:
   - -fwrite-ide-info

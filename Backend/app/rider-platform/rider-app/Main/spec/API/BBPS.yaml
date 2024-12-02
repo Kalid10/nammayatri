@@ -1,0 +1,45 @@
+imports:
+  BBPSSessionResp: Domain.Types.BBPS
+  CreateOrderResp: Kernel.External.Payment.Interface
+  PaymentStatusResp: Lib.Payment.Domain.Action
+  BBPSPaymentStatus: Domain.Types.BBPS
+  BBPSBillDetails: Domain.Types.BBPS
+
+module: BBPS
+types:
+  BBPSSessionReq:
+    deviceId: Text
+    mobileNumber: Text
+  BBPSPaymentReq:
+    transType: Text
+    mobileNumber: Text
+    deviceId: Text
+    billdetails: BBPSBillDetails
+    bbpsTxnid: Text
+    appId: Text
+  BBPSPaymentStatusAPIRes:
+    status: BBPSPaymentStatus
+
+
+apis:
+  - POST:
+      endpoint: /bbps/session
+      auth: TokenAuth
+      request:
+        type: BBPSSessionReq
+      response:
+        type: BBPSSessionResp
+  - POST:
+      endpoint: /bbps/createOrder
+      auth: TokenAuth
+      request:
+        type: BBPSPaymentReq
+      response:
+        type: CreateOrderResp
+  - GET:
+      endpoint: /bbps/getOrderStatus/{orderId}
+      auth: TokenAuth
+      params:
+        orderId: Text
+      response:
+        type: BBPSPaymentStatusAPIRes

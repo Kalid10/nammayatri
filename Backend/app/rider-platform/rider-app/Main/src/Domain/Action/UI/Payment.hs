@@ -22,6 +22,7 @@ module Domain.Action.UI.Payment
 where
 
 import Control.Applicative ((<|>))
+import qualified Domain.Action.UI.BBPS as BBPS
 import qualified Domain.Action.UI.FRFSTicketService as FRFSTicketService
 import qualified Domain.Types.Merchant as DM
 import qualified Domain.Types.MerchantServiceConfig as DMSC
@@ -181,11 +182,13 @@ juspayWebhookHandler merchantShortId mbCity mbServiceType mbPlaceId authData val
     case mbServiceType of
       Just Payment.FRFSBooking -> void $ FRFSTicketService.webhookHandlerFRFSTicket (ShortId orderShortId) merchantId
       Just Payment.FRFSBusBooking -> void $ FRFSTicketService.webhookHandlerFRFSTicket (ShortId orderShortId) merchantId
+      Just Payment.BBPS -> void $ BBPS.webhookHandlerBBPS (ShortId orderShortId) merchantId osr
       _ -> pure ()
   pure Ack
   where
     getPaymentServiceByType = \case
       Just Payment.Normal -> DMSC.PaymentService Payment.Juspay
+      Just Payment.BBPS -> DMSC.PaymentService Payment.Juspay
       Just Payment.FRFSBooking -> DMSC.MetroPaymentService Payment.Juspay
       Just Payment.FRFSBusBooking -> DMSC.BusPaymentService Payment.Juspay
       Nothing -> DMSC.PaymentService Payment.Juspay

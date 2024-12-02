@@ -175,6 +175,7 @@ library
       Domain.Action.Internal.StopEvents
       Domain.Action.UI.AadhaarVerification
       Domain.Action.UI.AppInstalls
+      Domain.Action.UI.BBPS
       Domain.Action.UI.Booking
       Domain.Action.UI.Cac
       Domain.Action.UI.Call
@@ -278,6 +279,7 @@ library
       ExternalBPP.Metro.ExternalAPI.CMRL.TicketStatus
       ExternalBPP.Metro.Flow
       Lib.JourneyPlannerTypes
+      SharedLogic.BBPS
       SharedLogic.Cac
       SharedLogic.CallBPP
       SharedLogic.CallBPPInternal
@@ -483,6 +485,7 @@ library
       API.Action.Dashboard.RideBooking.Registration
       API.Action.Dashboard.RideBooking.Search
       API.Action.Dashboard.RideBooking.Select
+      API.Action.UI.BBPS
       API.Action.UI.Cac
       API.Action.UI.CustomerReferral
       API.Action.UI.EditLocation
@@ -526,6 +529,7 @@ library
       API.Types.Dashboard.RideBooking.Registration
       API.Types.Dashboard.RideBooking.Search
       API.Types.Dashboard.RideBooking.Select
+      API.Types.UI.BBPS
       API.Types.UI.CustomerReferral
       API.Types.UI.EditLocation
       API.Types.UI.EstimateBP
@@ -546,6 +550,8 @@ library
       Domain.Types.AadhaarOtpVerify
       Domain.Types.AadhaarVerification
       Domain.Types.AppInstalls
+      Domain.Types.BBPS
+      Domain.Types.BBPSConfig
       Domain.Types.BecknConfig
       Domain.Types.BlackListOrg
       Domain.Types.Booking
@@ -652,6 +658,8 @@ library
       Storage.Beam.AadhaarVerification
       Storage.Beam.AmbulanceDetails
       Storage.Beam.AppInstalls
+      Storage.Beam.BBPS
+      Storage.Beam.BBPSConfig
       Storage.Beam.BecknConfig
       Storage.Beam.BlackListOrg
       Storage.Beam.Booking
@@ -759,6 +767,8 @@ library
       Storage.Queries.AadhaarOtpVerify
       Storage.Queries.AadhaarVerification
       Storage.Queries.AppInstalls
+      Storage.Queries.BBPS
+      Storage.Queries.BBPSConfig
       Storage.Queries.BecknConfig
       Storage.Queries.BlackListOrg
       Storage.Queries.Booking
@@ -977,6 +987,7 @@ library
     , http-media
     , http-types
     , json-logic-hs
+    , jwt
     , lens
     , lens-aeson
     , memory
@@ -1107,6 +1118,7 @@ executable rider-app-exe
     , http-media
     , http-types
     , json-logic-hs
+    , jwt
     , lens
     , lens-aeson
     , memory

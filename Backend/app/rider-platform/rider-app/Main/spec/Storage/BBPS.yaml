@@ -1,0 +1,170 @@
+imports:
+  Merchant: Domain.Types.Merchant
+  MerchantOperatingCity: Domain.Types.MerchantOperatingCity
+  LocationAddress: Domain.Types.LocationAddress
+  MerchantPaymentMethod: Domain.Types.MerchantPaymentMethod
+  PaymentStatus: BecknV2.OnDemand.Enums
+  BaseUrl: Kernel.Types.Common
+  Value: Data.Aeson
+  DbHash: Kernel.External.Encryption
+  EncryptedHashedField: Kernel.External.Encryption
+  Person: Domain.Types.Person
+
+
+BBPSConfig:
+  tableName: bbps_config
+  derives: "Generic"
+
+  fields:
+    bbpsSessionUrl: Text
+    bbpsConfirmUrl: Text
+    bbpsAgentId: Text
+    bbpsSignatureKey: EncryptedHashedField e Text
+    merchantId: Id Merchant
+  excludedFields: [merchantOperatingCityId]
+
+  beamFields:
+    bbpsSignatureKey:
+      bbpsSignatureKeyEncrypted: Text
+      bbpsSignatureKeyHash: DbHash
+  fromTType:
+    bbpsSignatureKey: EncryptedHashed (Encrypted bbpsSignatureKeyEncrypted) bbpsSignatureKeyHash|E
+  toTType:
+    bbpsSignatureKeyEncrypted: bbpsSignatureKey & unEncrypted . (.encrypted)|E
+    bbpsSignatureKeyHash: bbpsSignatureKey & (.hash)|E
+  constraints:
+    merchantId: PrimaryKey
+  queries:
+    findByMerchantId:
+      kvFunction: findOneWithKV
+      where: merchantId
+  sqlType:
+    bbpsSignatureKeyEncrypted: text
+    bbpsSignatureKeyHash: bytea
+
+
+
+BBPS:
+  tableName: bbps
+  types:
+    Tag:
+      value: Text
+      name: Text
+    BBPSPaymentStatus:
+      enum: "NEW,PENDING,SUCCESS,FAILED,REFUND_PENDING,REFUNDED,CONFIRMATION_PENDING"
+    BBPSBillDetails:
+      txnAmount: Text
+      customerParams: "Maybe [Tag]"
+      billerId: Text
+    BBPSSessionPayload:
+      ref_id: Text
+      agent_id: Text
+      token: Text
+    BBPSSessionResp:
+      ref_id: Maybe Text
+      status: Maybe Text
+      response_code: Maybe Text
+      response_message: Maybe Text
+      client_id: Maybe Text
+      client_secret: Maybe Text
+      expiry: Maybe Text
+    BBPSBillPayReq:
+      ref_id: Text
+      agent_id: Text
+      biller_id: Text
+      si_txn: Bool
+      customer_details: CustomerDetails
+      customer_params: "[Tag]"
+      direct_bill_channel: Maybe Text
+      direct_bill_content_id: Maybe Text
+      payment_ref_id: Text
+      payment_method: BBPSPaymentMethod
+      amount: BBPSAmount
+      payment_information: "[Tag]"
+    CustomerDetails:
+      mobile: Text
+      email: Maybe Text
+      aadhar: Maybe Text
+      pan: Maybe Text
+      remitter_name: Maybe Text
+    BBPSPaymentMethod:
+      quick_pay: Bool
+      split_pay: Bool
+      off_us_pay: Bool
+      payment_mode: Text
+    BBPSAmount:
+      amount: Text
+      cust_conv_fee: Text
+      cou_cust_conv_fee: Maybe Text
+      split_pay_amount: Maybe Text
+      amount_breakups: "[Tag]"
+    BBPSBillPayResp:
+      ref_id: Text
+      status: Text
+      response_code: Text
+      response_msg: Text
+      approval_ref_num: Text
+      txn_reference_id: Maybe Text
+      compliance_resp_code: Maybe Text
+      compliance_reason: Maybe Text
+      biller_response: BillerResponse
+      additional_info: "Maybe [Tag]"
+    BillerResponse:
+      customer_name: Maybe Text
+      amount: Text
+      due_date: Maybe Text
+      bill_date: Maybe Text
+      bill_number: Maybe Text
+      bill_period: Maybe Text
+      cust_conv_fee: Maybe Text
+      amount_options: "Maybe [Tag]"
+
+  fields:
+    refId: Id BBPS
+    customerId: Id Person
+    refShortId: ShortId BBPS
+    status: BBPSPaymentStatus
+    transType: Text
+    customerMobileNumber: Text
+    billDetails: BBPSBillDetails
+    bbpsTxnid: Text
+    merchantId: Id Merchant
+    merchantOperatingCityId: Id MerchantOperatingCity
+
+  beamFields:
+    billDetails:
+      txnAmount: Text
+      customerParams: "Maybe Value"
+      billerId: Text
+  sqlType:
+    customerParams: "json"
+
+  toTType:
+    customerParams: Kernel.Prelude.toJSON <$> ((.customerParams) billDetails)|E
+    txnAmount: ((.txnAmount) billDetails)|E
+    billerId: ((.billerId) billDetails)|E
+
+  fromTType:
+    billDetails: Domain.Types.BBPS.BBPSBillDetails txnAmount ((\val -> case Data.Aeson.fromJSON val of Data.Aeson.Success x -> Just x; Data.Aeson.Error _ -> Nothing) =<< customerParams) billerId|E
+
+  constraints:
+    refId: PrimaryKey
+    customerId: SecondaryKey
+
+  queries:
+    updateStatusByRefId:
+      kvFunction: updateOneWithKV
+      params: [status]
+      where: refId
+    findByRefId:
+      kvFunction: findOneWithKV
+      where: refId
+    findAllByCustomerId:
+      kvFunction: findAllWithOptionsKV
+      orderBy:
+        field: createdAt
+        order: desc
+      where: customerId
+
+  extraOperations:
+    - GENERATE_INDEXES
