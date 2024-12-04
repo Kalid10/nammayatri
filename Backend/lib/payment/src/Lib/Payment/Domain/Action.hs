@@ -356,7 +356,7 @@ chargePaymentIntentService paymentIntentId capturePaymentIntentCall getPaymentIn
     else pure False -- if already charged or cancelled or auto refunded no need to charge again
 
 -- create order -----------------------------------------------------
-
+--3)
 createOrderService ::
   ( EncFlow m r,
     BeamFlow m r
@@ -381,7 +381,7 @@ createOrderService merchantId personId createOrderReq createOrderCall = do
           QOrder.updateStatusToExpired existingOrder.id
           return Nothing
         else do
-          sdkPayload <- buildSDKPayload createOrderReq existingOrder
+          sdkPayload <- buildSDKPayload createOrderReq existingOrder -- ?
           case sdkPayload of
             Just sdk_payload -> do
               return $

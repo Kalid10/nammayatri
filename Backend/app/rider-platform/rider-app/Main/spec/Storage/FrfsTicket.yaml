@@ -29,6 +29,7 @@ imports:
   LatLong: Kernel.External.Maps.Types
   JourneySearchData: Lib.JourneyPlannerTypes
   StationType: Domain.Types.StationType
+  Pass: Domain.Types.Pass
 
 FRFSSearch:
   tableName: frfs_search
@@ -146,6 +147,7 @@ FRFSQuote:
     stationsJson: Text
     routeStationsJson: Maybe Text
     discountsJson: Maybe Text
+    passesJson: Maybe Text
     vehicleType: VehicleCategory
     bppSubscriberId: Text
     bppSubscriberUrl: Text
@@ -212,6 +214,7 @@ FRFSTicketBooking:
     stationsJson: Text
     routeStationsJson: Maybe Text
     discountsJson: Maybe Text
+    passesJson: Maybe Text
     bppItemId: Text
     _type: FRFSQuoteType
     fromStationId: Id Station
@@ -713,6 +716,7 @@ FRFSFarePolicy:
   fields:
     id: Id FRFSFarePolicy
     applicableDiscountIds: "[Id FRFSTicketDiscount]"
+    applicablePassIds: "[Id Pass]"
     _type: FRFSFarePolicyType
     description: Text
     merchantId: Id Merchant
@@ -720,10 +724,17 @@ FRFSFarePolicy:
   types:
     FRFSFarePolicyType:
       enum: "MatrixBased, StageBased"
-  default:
-    applicableDiscountIds: "'{}'"
   constraints:
     id: PrimaryKey
+  beamType:
+    applicablePassIds: Maybe [Text]
+  toTType:
+    applicablePassIds: (Kernel.Prelude.Just $ Kernel.Types.Id.getId <$> applicablePassIds)|E
+  fromTType:
+    applicablePassIds: Kernel.Prelude.maybe [] (Kernel.Types.Id.Id <$>) applicablePassIds|E
+  default:
+    applicableDiscountIds: "'{}'"
+    applicablePassIds: "'{}'"
   queries:
     findById:
       kvFunction: findOneWithKV
