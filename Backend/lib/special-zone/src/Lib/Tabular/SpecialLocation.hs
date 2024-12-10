@@ -37,8 +37,9 @@ mkPersist
       locationName Text
       category Text
       gates (PostgresList Domain.GatesInfo)
+      merchantId Text Maybe
       merchantOperatingCityId Text Maybe
-      linkedLocationsIds (PostgresList Text),
+      linkedLocationsIds (PostgresList Text)
       locationType Domain.SpecialLocationType Maybe
       createdAt UTCTime
       updatedAt UTCTime

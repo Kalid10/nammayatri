@@ -34,6 +34,7 @@ data SpecialLocation = SpecialLocation
   { id :: Id SpecialLocation,
     locationName :: Text,
     category :: Text,
+    merchantId :: Maybe Text,
     merchantOperatingCityId :: Maybe Text,
     gates :: [GatesInfo], --TODO: deprecate this later
     geom :: Maybe Text,

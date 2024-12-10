@@ -288,6 +288,7 @@ postMerchantSpecialLocationUpsert merchantShortId _city mbSpecialLocationId requ
       let geom = request.geom <|> mbGeometry
       id <- maybe generateGUID (return . (.id)) mbExistingSpLoc
       now <- getCurrentTime
+      merchant <- QM.findByShortId merchantShortId
       merchantOperatingCity <- maybe (return Nothing) (CQMOC.findByMerchantShortIdAndCity merchantShortId) request.city
       locationName <-
         fromMaybeM (InvalidRequest "Location Name cannot be empty for a new special location") $
@@ -301,6 +302,7 @@ postMerchantSpecialLocationUpsert merchantShortId _city mbSpecialLocationId requ
             merchantOperatingCityId = (.id.getId) <$> merchantOperatingCity,
             linkedLocationsIds = maybe [] (.linkedLocationsIds) mbExistingSpLoc,
             locationType = SL.Closed,
+            merchantId = (.id.getId) <$> merchant,
             ..
           }
 
@@ -312,7 +314,7 @@ deleteMerchantSpecialLocationDelete _merchantShortid _city specialLocationId = d
   pure Success
 
 postMerchantSpecialLocationGatesUpsert :: ShortId DM.Merchant -> Context.City -> Id SL.SpecialLocation -> Common.UpsertSpecialLocationGateReqT -> Flow APISuccess
-postMerchantSpecialLocationGatesUpsert _merchantShortId _city specialLocationId request = do
+postMerchantSpecialLocationGatesUpsert merchantShortId city specialLocationId request = do
   void $ QSL.findById specialLocationId >>= fromMaybeM (InvalidRequest "Cound not find a special location with the provided id")
   existingGates <- QGI.findAllGatesBySpecialLocationId specialLocationId
   createOrUpdateGate existingGates request
@@ -335,6 +337,8 @@ postMerchantSpecialLocationGatesUpsert _merchantShortId _city specialLocationId 
       latitude <- fromMaybeM (InvalidRequest "Latitude field cannot be empty for a new gate") $ reqT.latitude <|> (mbGate <&> (.point.lat))
       longitude <- fromMaybeM (InvalidRequest "Longitude field cannot be empty for a new gate") $ reqT.longitude <|> (mbGate <&> (.point.lon))
       address <- fromMaybeM (InvalidRequest "Address cannot be empty for a new gate") $ reqT.address <|> (mbGate >>= (.address))
+      mbMerchant <- QM.findByShortId merchantShortId
+      mbMerchantOperatingCity <- CQMOC.findByMerchantShortIdAndCity merchantShortId city
       let canQueueUpOnGate = fromMaybe False $ reqT.canQueueUpOnGate <|> (mbGate <&> (.canQueueUpOnGate))
           defaultDriverExtra = reqT.defaultDriverExtra <|> (mbGate >>= (.defaultDriverExtra))
           geom = reqT.geom <|> mbGeom
@@ -347,6 +351,8 @@ postMerchantSpecialLocationGatesUpsert _merchantShortId _city specialLocationId 
             updatedAt = now,
             point = LatLong {lat = latitude, lon = longitude},
             gateType = D.Pickup,
+            merchantId = (.id.getId) <$> mbMerchant,
+            merchantOperatingCityId = (.id.getId) <$> mbMerchantOperatingCity,
             ..
           }
 

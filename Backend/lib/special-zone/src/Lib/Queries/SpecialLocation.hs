@@ -77,7 +77,7 @@ makeFullSpecialLocation (D.SpecialLocation {..}, specialShape) = do
   gatesWithShape <- QGI.findAllGatesBySpecialLocationId id
   let gatesInfoFull =
         map
-          ( \(GD.GateInfo {point = gatePoint, id = gateId, gateType = gt, createdAt = _gateCreatedAt, geom = _gateGeom, updatedAt = _gateUpdatedAt, ..}, gateShape) ->
+          ( \(GD.GateInfo {point = gatePoint, id = gateId, gateType = gt, createdAt = _gateCreatedAt, geom = _gateGeom, updatedAt = _gateUpdatedAt, merchantId = _merchantId, merchantOperatingCityId = _merchantOperatingCityId, ..}, gateShape) ->
               GD.GateInfoFull
                 { GD.id = gateId,
                   GD.point = gatePoint,

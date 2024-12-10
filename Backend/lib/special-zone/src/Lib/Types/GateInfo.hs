@@ -46,6 +46,8 @@ data GateInfo = GateInfo
     createdAt :: UTCTime,
     updatedAt :: UTCTime,
     canQueueUpOnGate :: Bool,
-    gateType :: GateType
+    gateType :: GateType,
+    merchantId :: Maybe Text,
+    merchantOperatingCityId :: Maybe Text
   }
   deriving (Generic, Show, Eq, FromJSON, ToJSON, ToSchema)
