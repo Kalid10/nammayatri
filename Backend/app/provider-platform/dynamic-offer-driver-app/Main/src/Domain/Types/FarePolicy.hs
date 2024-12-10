@@ -209,7 +209,7 @@ mkCongestionChargeMultiplier (DPM.ExtraDistanceFare charge) = ExtraDistanceFare 
 farePolicyToFullFarePolicy :: Id Merchant -> DVST.ServiceTierType -> DTC.TripCategory -> Maybe DTC.CancellationFarePolicy -> CongestionChargeDetails -> FarePolicy -> Maybe Bool -> FullFarePolicy
 farePolicyToFullFarePolicy merchantId' vehicleServiceTier tripCategory cancellationFarePolicy CongestionChargeDetails {..} FarePolicy {..} disableRecompute =
   FullFarePolicy
-    { merchantId = merchantId', -- There is merchantId in FarePolicy {..} too. Are they valees equal?
+    { merchantId = merchantId',
       ..
     }
 

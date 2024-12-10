@@ -1612,8 +1612,8 @@ postMerchantSpecialLocationGatesUpsert _merchantShortId _city specialLocationId 
             updatedAt = now,
             point = LatLong {lat = latitude, lon = longitude},
             gateType = D.Pickup,
-            merchantId = specialLocation.merchantId,
-            merchantOperatingCityId = specialLocation.merchantOperatingCityId,
+            merchantId = Id <$> specialLocation.merchantId,
+            merchantOperatingCityId = Id <$> specialLocation.merchantOperatingCityId,
             ..
           }
 

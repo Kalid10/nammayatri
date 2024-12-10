@@ -351,8 +351,8 @@ postMerchantSpecialLocationGatesUpsert merchantShortId city specialLocationId re
             updatedAt = now,
             point = LatLong {lat = latitude, lon = longitude},
             gateType = D.Pickup,
-            merchantId = (.id.getId) <$> mbMerchant,
-            merchantOperatingCityId = (.id.getId) <$> mbMerchantOperatingCity,
+            merchantId = cast . (.id) <$> mbMerchant,
+            merchantOperatingCityId = cast . (.id) <$> mbMerchantOperatingCity,
             ..
           }
 

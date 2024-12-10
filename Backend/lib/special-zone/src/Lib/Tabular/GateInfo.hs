@@ -62,5 +62,7 @@ instance FromTType GateInfoT Domain.GateInfo where
         { id = Id id,
           specialLocationId = fromKey specialLocationId,
           geom = Nothing,
+          merchantId = Id <$> merchantId,
+          merchantOperatingCityId = Id <$> merchantOperatingCityId,
           ..
         }
