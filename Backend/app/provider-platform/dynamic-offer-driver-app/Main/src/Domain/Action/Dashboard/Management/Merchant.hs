@@ -1552,7 +1552,6 @@ postMerchantSpecialLocationUpsert merchantShortId _city mbSpecialLocationId requ
       let geom = request.geom <|> mbGeometry
       id <- maybe generateGUID (return . (.id)) mbExistingSpLoc
       now <- getCurrentTime
-      merchant <- QM.findByShortId merchantShortId
       merchantOperatingCity <- maybe (return Nothing) (CQMOC.findByMerchantShortIdAndCity merchantShortId) request.city
       locationName <-
         fromMaybeM (InvalidRequest "Location Name cannot be empty for a new special location") $
@@ -1566,7 +1565,7 @@ postMerchantSpecialLocationUpsert merchantShortId _city mbSpecialLocationId requ
             merchantOperatingCityId = cast . (.id) <$> merchantOperatingCity,
             linkedLocationsIds = maybe [] (.linkedLocationsIds) mbExistingSpLoc,
             locationType = SL.Closed,
-            merchantId = cast . (.id) <$> merchant,
+            merchantId = cast . (.merchantId) <$> merchantOperatingCity,
             ..
           }
 
