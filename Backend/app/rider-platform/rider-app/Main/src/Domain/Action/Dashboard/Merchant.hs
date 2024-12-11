@@ -299,10 +299,10 @@ postMerchantSpecialLocationUpsert merchantShortId _city mbSpecialLocationId requ
           { gates = [],
             createdAt = maybe now (.createdAt) mbExistingSpLoc,
             updatedAt = now,
-            merchantOperatingCityId = (.id.getId) <$> merchantOperatingCity,
+            merchantOperatingCityId = cast . (.id) <$> merchantOperatingCity,
             linkedLocationsIds = maybe [] (.linkedLocationsIds) mbExistingSpLoc,
             locationType = SL.Closed,
-            merchantId = (.id.getId) <$> merchant,
+            merchantId = cast . (.id) <$> merchant,
             ..
           }
 

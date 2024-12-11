@@ -61,5 +61,7 @@ instance FromTType SpecialLocationT Domain.SpecialLocation where
           geom = Nothing,
           linkedLocationsIds = map Id (unPostgresList linkedLocationsIds),
           locationType = fromMaybe Domain.Closed locationType,
+          merchantId = Id <$> merchantId,
+          merchantOperatingCityId = Id <$> merchantOperatingCityId,
           ..
         }

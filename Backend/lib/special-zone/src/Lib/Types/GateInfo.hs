@@ -35,10 +35,6 @@ data GateInfoFull = GateInfoFull
 data GateType = Pickup | Drop
   deriving (Read, Show, Generic, Eq, FromJSON, ToJSON, ToSchema)
 
-data Merchant
-
-data MerchantOperatingCity
-
 data GateInfo = GateInfo
   { id :: Id GateInfo,
     point :: LatLong,

@@ -51,5 +51,6 @@ instance ToTType SpecialLocationGeomT Domain.SpecialLocation where
       { id = getId id,
         gates = PostgresList gates,
         linkedLocationsIds = PostgresList $ map (.getId) linkedLocationsIds,
+        merchantOperatingCityId = getId <$> merchantOperatingCityId,
         ..
       }

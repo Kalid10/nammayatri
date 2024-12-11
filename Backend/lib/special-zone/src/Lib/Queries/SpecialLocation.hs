@@ -91,6 +91,7 @@ makeFullSpecialLocation (D.SpecialLocation {..}, specialShape) = do
     SpecialLocationFull
       { gatesInfo = gatesInfoFull,
         geoJson = Just specialShape,
+        merchantOperatingCityId = getId <$> merchantOperatingCityId,
         ..
       }
 
@@ -194,7 +195,7 @@ deleteById = Esq.deleteByKey @SpecialLocationT
 specialLocToSpecialLocWarrior :: Transactionable m => D.SpecialLocation -> m SpecialLocationWarrior
 specialLocToSpecialLocWarrior D.SpecialLocation {..} = do
   linkedLocations <- mapM Lib.Queries.SpecialLocation.findById linkedLocationsIds >>= pure . catMaybes
-  pure SpecialLocationWarrior {..}
+  pure SpecialLocationWarrior {merchantOperatingCityId = getId <$> merchantOperatingCityId, ..}
 
 specialLocFullToSpecialLocWarrior :: Transactionable m => SpecialLocationFull -> m SpecialLocationWarrior
 specialLocFullToSpecialLocWarrior SpecialLocationFull {..} = do
