@@ -36,6 +36,7 @@ mkPersist
       locationName Text
       category Text
       gates (PostgresList Domain.GatesInfo)
+      merchantId Text Maybe
       merchantOperatingCityId Text Maybe
       linkedLocationsIds (PostgresList Text),
       geom Text Maybe
@@ -52,5 +53,6 @@ instance ToTType SpecialLocationGeomT Domain.SpecialLocation where
         gates = PostgresList gates,
         linkedLocationsIds = PostgresList $ map (.getId) linkedLocationsIds,
         merchantOperatingCityId = getId <$> merchantOperatingCityId,
+        merchantId = getId <$> merchantId,
         ..
       }
