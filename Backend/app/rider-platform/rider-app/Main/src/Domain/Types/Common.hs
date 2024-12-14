@@ -1,10 +1,8 @@
 {-# LANGUAGE TemplateHaskell #-}
-{-# OPTIONS_GHC -Wno-dodgy-exports #-}
 {-# OPTIONS_GHC -Wno-orphans #-}
 
 module Domain.Types.Common
-  ( module Domain.Types.Common,
-    module Domain.Types,
+  ( module Domain.Types,
   )
 where
 
