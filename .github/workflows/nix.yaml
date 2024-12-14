@@ -46,7 +46,7 @@ jobs:
   build:
     strategy:
       matrix:
-        system: [x86_64-linux, aarch64-darwin]
+        system: [x86_64-linux, aarch64-darwin, aarch64-linux]
     needs: [process-labels]
     runs-on: ${{ matrix.system }}
     if: |
