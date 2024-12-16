@@ -4972,18 +4972,8 @@ metroTicketBookingFlow = do
 metroTicketPaymentFlow :: CreateOrderRes -> String -> FlowBT String Unit
 metroTicketPaymentFlow (CreateOrderRes orderResp) bookingId = do
   liftFlowBT $ initiatePaymentPage
-  let
-    (PaymentPagePayload sdk_payload) = orderResp.sdk_payload
-
-    (PayPayload innerpayload) = sdk_payload.payload
-
-    finalPayload = PayPayload $ innerpayload { language = Just (getPaymentPageLangKey (getLanguageLocale languageKey)) }
-
-    sdkPayload = PaymentPagePayload $ sdk_payload { payload = finalPayload }
-
-    shortOrderID = orderResp.order_id
   lift $ lift $ doAff $ makeAff \cb -> runEffectFn1 checkPPInitiateStatus (cb <<< Right) $> nonCanceler
-  void $ paymentPageUI sdkPayload
+  void $ paymentPageUI $ addLanguageToPayload (getPaymentPageLangKey (getLanguageLocale languageKey)) orderResp.sdk_payload_json
   void $ lift $ lift $ loaderText (getString STR.LOADING) (getString STR.PLEASE_WAIT_WHILE_IN_PROGRESS)
   void $ lift $ lift $ toggleLoader true
   setValueToLocalStore METRO_PAYMENT_STATUS_POOLING "true"
@@ -5093,19 +5083,10 @@ ticketPaymentFlow screenData = do
   let
     ticketPlaceID = maybe "" (\(TicketPlaceResp ticketPlaceResp) -> ticketPlaceResp.id) screenData.placeInfo
   (CreateOrderRes orderResp) <- Remote.bookTicketsBT (Remote.mkBookingTicketReq screenData) ticketPlaceID
-  let
-    (PaymentPagePayload sdk_payload) = orderResp.sdk_payload
-
-    (PayPayload innerpayload) = sdk_payload.payload
-
-    finalPayload = PayPayload $ innerpayload { language = Just (getPaymentPageLangKey (getLanguageLocale languageKey)) }
-
-    sdkPayload = PaymentPagePayload $ sdk_payload { payload = finalPayload }
-
-    shortOrderID = orderResp.order_id
+  let shortOrderID = orderResp.order_id
   modifyScreenState $ TicketBookingScreenStateType (\ticketBookingScreen -> ticketBookingScreen { data { shortOrderId = shortOrderID }, props { selectedBookingId = shortOrderID } })
   lift $ lift $ doAff $ makeAff \cb -> runEffectFn1 checkPPInitiateStatus (cb <<< Right) $> nonCanceler
-  void $ paymentPageUI sdkPayload
+  void $ paymentPageUI $ addLanguageToPayload (getPaymentPageLangKey (getLanguageLocale languageKey)) orderResp.sdk_payload_json
   void $ lift $ lift $ toggleLoader true
   void $ pure $ toggleBtnLoader "" false
   (GetTicketStatusResp ticketStatus) <- Remote.getTicketStatusBT shortOrderID
