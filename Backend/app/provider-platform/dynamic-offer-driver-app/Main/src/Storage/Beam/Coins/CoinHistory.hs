@@ -13,7 +13,6 @@
 -}
 {-# LANGUAGE DerivingStrategies #-}
 {-# LANGUAGE InstanceSigs #-}
-{-# OPTIONS_GHC -Wno-orphans #-}
 
 module Storage.Beam.Coins.CoinHistory where
 
