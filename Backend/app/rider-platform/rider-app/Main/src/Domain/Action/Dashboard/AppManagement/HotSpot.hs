@@ -1,5 +1,3 @@
-{-# OPTIONS_GHC -Wno-orphans #-}
-
 module Domain.Action.Dashboard.AppManagement.HotSpot (postHotSpotRemoveExpired) where
 
 import qualified Domain.Action.UI.HotSpot as DAH
