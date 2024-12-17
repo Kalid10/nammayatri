@@ -215,7 +215,7 @@ LlmPrompt:
   derives: Generic,Show,'UsageSafety
   types:
     PromptKey:
-      enum: AzureOpenAI_DriverProfileGen_1
+      enum: DriverProfileGen_1 # AzureOpenAI_DriverProfileGen_1
     UseCase:
       enum: DriverProfileGen, DriverSupport
   fields:
