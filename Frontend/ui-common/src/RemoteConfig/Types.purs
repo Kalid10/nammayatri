@@ -291,3 +291,7 @@ type BundleLottieConfig = {
   lottieUrl :: String
 , enable :: Boolean
 }
+
+type InvoiceConfig = {
+  isEnabled :: Boolean
+}

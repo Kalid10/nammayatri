@@ -29,6 +29,7 @@ getHi = Keymap {
 , logo: "प्रतीक चिन्ह"
 , about_app_description: "{} ड्राइवरों के साथ सवारों को जोड़ने के लिए एक खुला मंच है। ऐप सवारों के लिए मीटर दर के साथ एक सवारी बुक करने के लिए सुविधाजनक बनाता है इसलिए न्यूनतम किराया"
 , terms_and_conditions: "टी & सी"
+, invoice_generated_from_driver_to_rider: "ड्राइवर से लेकर सवार तक का चालान काटा गया"
 , about: "एप के बारे में"
 , privacy_policy: "गोपनीयता नीति"
 , set_up_your_account: "अपना खाता स्थापित करें"

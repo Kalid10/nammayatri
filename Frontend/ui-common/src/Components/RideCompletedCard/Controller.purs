@@ -90,7 +90,9 @@ type Config = {
   showIntercityDetails :: Boolean ,
   parkingCharges :: ParkingChargesConfig,
   showIntercityRideDetails :: Boolean,
-  interCityTextConfig :: IntercityRideTextConfig
+  interCityTextConfig :: IntercityRideTextConfig,
+  variant :: String,
+  driverCity :: String
 }
 
 data Theme = DARK | LIGHT
@@ -252,7 +254,9 @@ config = {
   parkingCharges : {
     parkingChargesTitle : "",
     parkingChargesDescription :""
-  }
+  },
+  variant : "",
+  driverCity : ""
 }
 
 type CustomerIssue = {

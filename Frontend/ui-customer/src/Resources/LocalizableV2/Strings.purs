@@ -777,6 +777,7 @@ getProxy str =
     YOU_SENT -> \a -> a @~ you_sent
     MESSAGE_YOUR_DRIVER -> \a -> a @~ message_your_driver
     CHECK_IN_WITH_YOUR_DRIVER -> \a -> a @~ check_in_with_your_driver
+    INVOICE_GENERATED_FROM_DRIVER_TO_RIDER -> \a -> a @~ invoice_generated_from_driver_to_rider
     CHECK_IN_WITH_YOUR_EM arg1 -> \a -> (a @~ check_in_with_your_em) arg1
     TRACK_ON_GOOGLE_MAPS -> \a -> a @~ track_on_google_maps
     OTP_EXPIRE_TIMER -> \a -> a @~ otp_expire_timer

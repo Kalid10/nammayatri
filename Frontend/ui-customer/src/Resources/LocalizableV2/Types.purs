@@ -150,6 +150,7 @@ newtype Keymap = Keymap {
 , delete :: String
 , deny_access :: String
 , describe_your_issue :: String
+, invoice_generated_from_driver_to_rider :: String
 , destination_outside_limits :: String
 , direct_call :: String
 , do_you_need_emergency_help :: String
@@ -3771,6 +3772,9 @@ message_your_driver = a
 
 check_in_with_your_driver :: Proxy "check_in_with_your_driver"
 check_in_with_your_driver = a
+
+invoice_generated_from_driver_to_rider :: Proxy "invoice_generated_from_driver_to_rider"
+invoice_generated_from_driver_to_rider = a
 
 check_in_with_your_em :: Proxy "check_in_with_your_em"
 check_in_with_your_em = a

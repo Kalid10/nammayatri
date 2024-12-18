@@ -1670,6 +1670,7 @@ getProxy str = case str of
   REMOVE_EYEWERE -> \a -> a @~ remove_eyewere
   IMAGE_VALIDATION_EXCEED_LIMIT -> \a -> a @~ image_validation_exceed_limit
   PARKING_CHARGES_INCLUDED arg1 -> \a -> (a @~ parking_charges_included) arg1
+  INVOICE_GENERATED_FROM_DRIVER_TO_RIDER -> \a -> a @~ invoice_generated_from_driver_to_rider
   INCLUDED -> \a -> a @~ included
   DB_CHECK_AND_NAME_MATCH_FAILED -> \a -> a @~ db_check_and_name_match_failed
   COMPLETE_YOUR_PROFILE -> \a -> a @~ complete_your_profile

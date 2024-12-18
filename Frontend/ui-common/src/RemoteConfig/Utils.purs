@@ -14,7 +14,7 @@
 -}
 module Common.RemoteConfig.Utils where
 
-import Common.RemoteConfig.Types (RemoteConfig, RCCarousel(..), ForwardBatchConfigData(..), TipsConfig, defaultForwardBatchConfigData, SubscriptionConfigVariantLevelEntity, SubscriptionConfigVariantLevel, GullakConfig, StuckRideFilterConfig, FeaturesConfigData(..), LottieSubscriptionInfo(..), LanguageKeyValue(..), defaultFeaturesConfigData, AppLanguage, AppConfigRC)
+import Common.RemoteConfig.Types (RemoteConfig, RCCarousel(..), VariantLevelRemoteConfig(..), InvoiceConfig(..), ForwardBatchConfigData(..), TipsConfig, defaultForwardBatchConfigData, SubscriptionConfigVariantLevelEntity, SubscriptionConfigVariantLevel, GullakConfig, StuckRideFilterConfig, FeaturesConfigData(..), LottieSubscriptionInfo(..), LanguageKeyValue(..), defaultFeaturesConfigData, AppLanguage, AppConfigRC)
 import DecodeUtil (decodeForeignObject, parseJSON, setAnyInWindow)
 import Data.String (null, toLower)
 import Data.Maybe (Maybe(..))
@@ -450,3 +450,26 @@ getConfigForVariant variant config =
     "DELIVERY_BIKE" -> config.deliveryBike
     _ -> config.default
       
+getInvoiceConfig :: String -> String -> InvoiceConfig
+getInvoiceConfig variant city =
+  let remoteConfig = fetchRemoteConfigString "invoice_config"
+      decodedConfig = decodeForeignObject (parseJSON remoteConfig) $ defaultCityRemoteConfig defaultInvoiceVariantConfig
+  in
+  getVariantLevelConfig variant $ getCityBasedConfig decodedConfig $ toLower city
+  where
+    getVariantLevelConfig variant config = case getConfigForVariant variant config of
+       Nothing -> {isEnabled : true}
+       Just variantConfig -> {isEnabled : variantConfig}
+
+defaultInvoiceVariantConfig :: VariantLevelRemoteConfig (Maybe Boolean)
+defaultInvoiceVariantConfig = 
+  { sedan: Just true
+  , suv: Just true
+  , hatchback: Just true
+  , autoRickshaw: Just true
+  , taxi: Just true
+  , taxiPlus: Just true
+  , bookAny: Just true
+  , deliveryBike: Just true
+  , default: Just true
+  }

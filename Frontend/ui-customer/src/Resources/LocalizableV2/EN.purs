@@ -659,6 +659,7 @@ getEn = Keymap {
 , pay_driver_using_wallet: ""
 , charges_applicable_after_3_mins: "Charges applicable after 3 mins"
 , reaching_your_destination_in_: "Arriving at your destination in "
+, invoice_generated_from_driver_to_rider: "Invoice generated from driver to rider"
 , waiting_at_pickup: "is waiting at pickup "
 , pickup: "Pickup"
 , pay_by_cash_or_upi: "Pay by Cash / UPI "

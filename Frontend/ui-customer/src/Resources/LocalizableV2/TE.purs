@@ -133,6 +133,7 @@ getTe = Keymap {
 , other: "ఇతర"
 , save: "సేవ్ చేయండి"
 , check_in_with_your_em: (\name -> "శీఘ్ర చాట్‌తో " <> name <> "లో చెక్ ఇన్ చేయండి")
+, invoice_generated_from_driver_to_rider: "డ్రైవర్ నుండి రైడర్‌కు ఇన్‌వాయిస్ రూపొందించబడింది"
 , add_new_address: "కొత్త చిరునామాను జోడించండి"
 , saved_addresses: "సేవ్ చేసిన చిరునామాలు"
 , addresses: "చిరునామాలు"

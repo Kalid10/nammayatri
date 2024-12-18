@@ -30,6 +30,7 @@ getTa = Keymap {
 , about: "பற்றி"
 , privacy_policy: "தனியுரிமைக் கொள்கை"
 , set_up_your_account: "உங்கள் கணக்கை அமைக்கவும்"
+, invoice_generated_from_driver_to_rider: "டிரைவரிடமிருந்து ரைடருக்கு இன்வாய்ஸ் உருவாக்கப்பட்டது"
 , continue: "தொடரவும்"
 , enter_your_name: "உங்கள் பெயரை உள்ளிடவும்"
 , full_name: "முழு பெயர்"

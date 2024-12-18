@@ -30,6 +30,7 @@ getMl = Keymap {
 , about: "ആപ്പിനെ കുറിച്ച്"
 , privacy_policy: "സ്വകാര്യതാ നയം"
 , set_up_your_account: "നിങ്ങളുടെ അക്കൗണ്ട് സജ്ജമാക്കുക"
+, invoice_generated_from_driver_to_rider: "ഡ്രൈവറിൽ നിന്ന് റൈഡറിലേക്ക് ഇൻവോയ്സ് സൃഷ്ടിച്ചു"
 , continue: "തുടരുക"
 , enter_your_name: "നിങ്ങളുടെ പേര് നൽകുക"
 , full_name: "പൂർണ്ണമായ പേര്"

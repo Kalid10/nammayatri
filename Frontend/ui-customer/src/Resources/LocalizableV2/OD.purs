@@ -123,6 +123,7 @@ getOd = Keymap {
 , skip: "ଛାଡନ୍ତୁ"
 , error_404: "ତ୍ରୁଟି 404"
 , problem_at_our_end: "ଆମ ପକ୍ଷରେ ସମସ୍ୟା ଅଛି। ଆମର ସଚେତନତାରେ ଖବର ପାଇବା ପାଇଁ ଅପେକ୍ଷା କରନ୍ତୁ"
+, invoice_generated_from_driver_to_rider: "ଡ୍ରାଇଭରରୁ ଆରୋହୀ ପର୍ଯ୍ୟନ୍ତ ଇନଭଏସ୍ ସୃଷ୍ଟି |"
 , notify_me: "ମୋତେ ସଚେତନ କରନ୍ତୁ"
 , address: "ଠିକଣା"
 , change: "ବଦଳାନ୍ତୁ"
