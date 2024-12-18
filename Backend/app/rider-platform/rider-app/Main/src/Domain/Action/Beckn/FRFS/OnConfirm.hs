@@ -115,7 +115,6 @@ onConfirm merchant booking' dOrder = do
     serviceAccount <- GWSA.getserviceAccount mId mocId' serviceName
     transitObjects' <- createTransitObjects booking tickets person serviceAccount
     url <- mkGoogleWalletLink serviceAccount transitObjects'
-    logDebug $ "Google Wallet Url: " <> show url
     void $ QTBooking.updateGoogleWalletLinkById (Just url) booking.id
   return ()
   where
@@ -334,7 +333,6 @@ mkGoogleWalletLink serviceAccount tObject = do
           }
   token' <- liftIO $ TC.createJWT' jwtHeader claims privateKey
   token <- fromEitherM (\err -> InternalError $ "Failed to get jwt token" <> show err) token'
-  logDebug $ "Token JWT" <> show (snd token)
   let textToken = snd token
   let url = "https://pay.google.com/gp/v/save/" <> textToken
   return url

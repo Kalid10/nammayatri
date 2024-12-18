@@ -576,7 +576,7 @@ FRFSConfig:
     busStationTtl: "1800"
     straightLineDistance: "5000"
     radius: "3000"
-    googleWalletClassName: "namma_yatri_metro"
+    googleWalletClassName: "'namma_yatri_metro'"
 
   fromTType:
     isCancellationAllowed: Kernel.Prelude.fromMaybe True|I

@@ -250,19 +250,19 @@ makeSession authMedium SmsSessionConfig {..} entityId merchantId fakeOtp partner
       }
 
 getConfigByStationIds :: PartnerOrganization -> Text -> Text -> Flow GetConfigResp
-getConfigByStationIds partnerOrg fromStationId toStationId = do
-  let isGMMStationId = T.isPrefixOf "Ch" fromStationId
+getConfigByStationIds partnerOrg fromGMMStationId toGMMStationId = do
+  let isGMMStationId = T.isPrefixOf "Ch" fromGMMStationId
   (fromStation', toStation') <-
     if isGMMStationId
       then do
-        let fromPOrgStationId = Id fromStationId
-        let toPOrgStationId = Id toStationId
+        let fromPOrgStationId = Id fromGMMStationId
+        let toPOrgStationId = Id toGMMStationId
         fromStation' <- B.runInReplica $ CQPOS.findStationWithPOrgName partnerOrg.orgId fromPOrgStationId
         toStation' <- B.runInReplica $ CQPOS.findStationWithPOrgName partnerOrg.orgId toPOrgStationId
         return (fromStation', toStation')
       else do
-        let fromStationId' = Id fromStationId
-        let toStationId' = Id toStationId
+        let fromStationId' = Id fromGMMStationId
+        let toStationId' = Id toGMMStationId
         fromStation' <- B.runInReplica $ CQPOS.findStationWithPOrgIdAndStationId fromStationId' partnerOrg.orgId
         toStation' <- B.runInReplica $ CQPOS.findStationWithPOrgIdAndStationId toStationId' partnerOrg.orgId
         return (fromStation', toStation')
