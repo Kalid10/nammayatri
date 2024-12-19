@@ -1796,6 +1796,7 @@ newtype Keymap
   , choose_preferred_metro :: String
   , metro_warriors :: String
   , search :: String
+  , driver_unsubscribed :: String
   }
 
 derive instance ntL :: Newtype Languages _
@@ -7132,3 +7133,6 @@ metro_warriors = Proxy
 
 search :: Proxy "search"
 search = Proxy
+
+driver_unsubscribed :: Proxy "driver_unsubscribed"
+driver_unsubscribed = Proxy

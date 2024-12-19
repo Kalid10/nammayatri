@@ -1781,4 +1781,5 @@ getEn =
     , choose_preferred_metro : "Choose preferred metro"
     , metro_warriors : "Metro Warriors"
     , search : "Search"
+    , driver_unsubscribed : "Driver has been unsubscibed from platform. Pay pending amount to subscribe back"
     }

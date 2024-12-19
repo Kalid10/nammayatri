@@ -1793,6 +1793,7 @@ data STR = LETS_GET_STARTED
         | CHOOSE_PREFERRED_METRO
         | METRO_WARRIORS
         | SEARCH
+        | DRIVER_UNSUBSCRIBED
 
 -- instance showSTR :: Show STR
 --   show = case _ of
