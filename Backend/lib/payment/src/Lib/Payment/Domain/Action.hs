@@ -397,7 +397,8 @@ createOrderService merchantId mbMerchantOpCityId personId createOrderReq createO
                       id = existingOrder.paymentServiceOrderId,
                       order_id = existingOrder.shortId.getShortId,
                       payment_links = Just existingOrder.paymentLinks,
-                      sdk_payload
+                      sdk_payload,
+                      sdk_payload_json = Just $ toJSON sdk_payload
                     }
             Nothing -> return Nothing
   where
