@@ -21,9 +21,11 @@ module Domain.Action.Dashboard.Fleet.Driver
     postDriverFleetSendJoiningOtp,
     postDriverFleetVerifyJoiningOtp,
     postDriverFleetLinkRCWithDriver,
+    putDriverDashboardFleetWmbTripDelete,
   )
 where
 
+import qualified API.Types.ProviderPlatform.Fleet.Driver
 import qualified "dashboard-helper-api" API.Types.ProviderPlatform.Fleet.Driver as Common
 import qualified "dashboard-helper-api" API.Types.ProviderPlatform.Management.DriverRegistration as Common
 import Data.Time
@@ -235,3 +237,13 @@ postDriverFleetLinkRCWithDriver ::
   Common.LinkRCWithDriverForFleetReq ->
   Flow APISuccess
 postDriverFleetLinkRCWithDriver = DDriver.linkRCWithDriverForFleet
+
+putDriverDashboardFleetWmbTripDelete ::
+  ShortId DM.Merchant ->
+  Context.City ->
+  Common.TripTransactionId ->
+  Flow APISuccess
+putDriverDashboardFleetWmbTripDelete id = do
+  QTT.updateStatus CANCELLED Nothing id
+  -- TODO : add notification to driver
+  pure Success

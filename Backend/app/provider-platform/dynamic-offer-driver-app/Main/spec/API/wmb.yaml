@@ -3,6 +3,7 @@ imports:
   APISuccess: Kernel.Types.APISuccess
   LatLong: Kernel.External.Maps.Types
   ServiceTierType: Domain.Types.Common
+  TripStatus: Domain.Types.TripTransaction
 
 module: WMB
 
@@ -34,7 +35,10 @@ types:
     vehicleNumber: Text
     routeCode: Text
 
-  TripLinkResp:
+  ActiveTripTransaction:
+    tripTransactionDetails: Maybe TripTransactionDetails
+
+  TripTransactionDetails:
     tripTransactionId: Text
     vehicleNum: Text
     vehicleType: ServiceTierType
@@ -67,13 +71,23 @@ apis:
       request:
         type: TripLinkReq
       response:
-        type: TripLinkResp
+        type: TripTransactionDetails
 
   - GET:
       endpoint: /ui/wmb/trip/active
       auth: TokenAuth PROVIDER_TYPE
       response:
-        type: TripLinkResp
+        type: ActiveTripTransaction
+
+  - GET:
+      endpoint: /ui/wmb/trip/list
+      auth: TokenAuth PROVIDER_TYPE
+      query:
+        - limit: Int
+        - offset: Int
+        - status: TripStatus
+      response:
+        type: "[TripTransactionDetails]"
 
   - POST:
       endpoint: /ui/wmb/trip/{tripTransactionId}/start

@@ -12,6 +12,7 @@
  the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 -}
 {-# LANGUAGE DerivingStrategies #-}
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE TemplateHaskell #-}
 {-# OPTIONS_GHC -Wno-orphans #-}
 
@@ -35,6 +36,7 @@ import Kernel.ServantMultipart
 import Kernel.Types.HideSecrets
 import Kernel.Types.HideSecrets as Reexport
 import Kernel.Utils.TH (mkHttpInstancesForEnum)
+import Servant (FromHttpApiData, ToHttpApiData)
 
 data Customer
 
@@ -177,3 +179,11 @@ data ServiceNames = YATRI_SUBSCRIPTION | YATRI_RENTAL
   deriving (Generic, FromJSON, ToJSON, Show, ToSchema, ToParamSchema)
 
 $(mkHttpInstancesForEnum ''ServiceNames)
+
+newtype TripTransactionId = TripTransactionId Text
+  deriving stock (Generic)
+  deriving anyclass (ToJSON, FromJSON, ToSchema, ToParamSchema)
+  deriving newtype (FromHttpApiData, ToHttpApiData)
+
+instance Kernel.Types.HideSecrets.HideSecrets TripTransactionId where
+  hideSecrets = Kernel.Prelude.identity

@@ -600,6 +600,7 @@ library
       Storage.Queries.Transformers.SearchTry
       Storage.Queries.TranslationsExtra
       Storage.Queries.TransporterConfigExtra
+      Storage.Queries.TripTransactionExtra
       Storage.Queries.Vehicle.Internal
       Storage.Queries.VehicleDetailsExtra
       Storage.Queries.VehicleExtra
@@ -714,6 +715,7 @@ library
       Domain.Types.AadhaarCard
       Domain.Types.AadhaarOtpReq
       Domain.Types.AadhaarOtpVerify
+      Domain.Types.ApprovalRequest
       Domain.Types.BackgroundVerification
       Domain.Types.BapMetadata
       Domain.Types.BecknConfig
@@ -749,13 +751,13 @@ library
       Domain.Types.DriverQuote
       Domain.Types.DriverRCAssociation
       Domain.Types.DriverReferral
-      Domain.Types.DriverRequest
       Domain.Types.DriverSSN
       Domain.Types.DriverStats
       Domain.Types.Estimate
       Domain.Types.Exophone
       Domain.Types.FareProduct
       Domain.Types.Feedback
+      Domain.Types.FleetConfig
       Domain.Types.FleetDriverAssociation
       Domain.Types.FleetOwnerDocumentVerificationConfig
       Domain.Types.FleetOwnerInformation
@@ -840,6 +842,7 @@ library
       Storage.Beam.AadhaarCard
       Storage.Beam.AadhaarOtpReq
       Storage.Beam.AadhaarOtpVerify
+      Storage.Beam.ApprovalRequest
       Storage.Beam.BackgroundVerification
       Storage.Beam.BapMetadata
       Storage.Beam.BecknConfig
@@ -875,13 +878,13 @@ library
       Storage.Beam.DriverQuote
       Storage.Beam.DriverRCAssociation
       Storage.Beam.DriverReferral
-      Storage.Beam.DriverRequest
       Storage.Beam.DriverSSN
       Storage.Beam.DriverStats
       Storage.Beam.Estimate
       Storage.Beam.Exophone
       Storage.Beam.FareProduct
       Storage.Beam.Feedback
+      Storage.Beam.FleetConfig
       Storage.Beam.FleetDriverAssociation
       Storage.Beam.FleetOwnerDocumentVerificationConfig
       Storage.Beam.FleetOwnerInformation
@@ -969,6 +972,7 @@ library
       Storage.Queries.AadhaarCard
       Storage.Queries.AadhaarOtpReq
       Storage.Queries.AadhaarOtpVerify
+      Storage.Queries.ApprovalRequest
       Storage.Queries.BackgroundVerification
       Storage.Queries.BapMetadata
       Storage.Queries.BecknConfig
@@ -1004,13 +1008,13 @@ library
       Storage.Queries.DriverQuote
       Storage.Queries.DriverRCAssociation
       Storage.Queries.DriverReferral
-      Storage.Queries.DriverRequest
       Storage.Queries.DriverSSN
       Storage.Queries.DriverStats
       Storage.Queries.Estimate
       Storage.Queries.Exophone
       Storage.Queries.FareProduct
       Storage.Queries.Feedback
+      Storage.Queries.FleetConfig
       Storage.Queries.FleetDriverAssociation
       Storage.Queries.FleetOwnerDocumentVerificationConfig
       Storage.Queries.FleetOwnerInformation

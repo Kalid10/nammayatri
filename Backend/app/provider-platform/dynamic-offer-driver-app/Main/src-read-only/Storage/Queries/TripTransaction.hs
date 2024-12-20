@@ -4,9 +4,12 @@
 
 module Storage.Queries.TripTransaction where
 
+import qualified Data.Text
+import qualified Domain.Types.Person
 import qualified Domain.Types.TripTransaction
 import Kernel.Beam.Functions
 import Kernel.External.Encryption
+import qualified Kernel.External.Maps.Types
 import Kernel.Prelude
 import qualified Kernel.Prelude
 import Kernel.Types.Error
@@ -21,6 +24,39 @@ create = createWithKV
 
 createMany :: (EsqDBFlow m r, MonadFlow m, CacheFlow m r) => ([Domain.Types.TripTransaction.TripTransaction] -> m ())
 createMany = traverse_ create
+
+findAllTripTransactionByDriverId :: (EsqDBFlow m r, MonadFlow m, CacheFlow m r) => (Kernel.Types.Id.Id Domain.Types.Person.Person -> m [Domain.Types.TripTransaction.TripTransaction])
+findAllTripTransactionByDriverId driverId = do findAllWithKV [Se.Is Beam.driverId $ Se.Eq (Kernel.Types.Id.getId driverId)]
+
+findByTransactionId :: (EsqDBFlow m r, MonadFlow m, CacheFlow m r) => (Kernel.Types.Id.Id Domain.Types.TripTransaction.TripTransaction -> m (Maybe Domain.Types.TripTransaction.TripTransaction))
+findByTransactionId id = do findOneWithKV [Se.Is Beam.id $ Se.Eq (Kernel.Types.Id.getId id)]
+
+updateOnStart ::
+  (EsqDBFlow m r, MonadFlow m, CacheFlow m r) =>
+  (Data.Text.Text -> Kernel.Prelude.Maybe Kernel.External.Maps.Types.LatLong -> Domain.Types.TripTransaction.TripStatus -> Kernel.Types.Id.Id Domain.Types.TripTransaction.TripTransaction -> m ())
+updateOnStart routeCode startLocation status id = do
+  _now <- getCurrentTime
+  updateOneWithKV
+    [ Se.Set Beam.routeCode routeCode,
+      Se.Set Beam.startLocationLat (Kernel.Prelude.fmap (.lat) startLocation),
+      Se.Set Beam.startLocationLon (Kernel.Prelude.fmap (.lon) startLocation),
+      Se.Set Beam.status status,
+      Se.Set Beam.updatedAt _now
+    ]
+    [Se.Is Beam.id $ Se.Eq (Kernel.Types.Id.getId id)]
+
+updateStatus ::
+  (EsqDBFlow m r, MonadFlow m, CacheFlow m r) =>
+  (Domain.Types.TripTransaction.TripStatus -> Kernel.Prelude.Maybe Kernel.External.Maps.Types.LatLong -> Kernel.Types.Id.Id Domain.Types.TripTransaction.TripTransaction -> m ())
+updateStatus status endLocation id = do
+  _now <- getCurrentTime
+  updateOneWithKV
+    [ Se.Set Beam.status status,
+      Se.Set Beam.endLocationLat (Kernel.Prelude.fmap (.lat) endLocation),
+      Se.Set Beam.endLocationLon (Kernel.Prelude.fmap (.lon) endLocation),
+      Se.Set Beam.updatedAt _now
+    ]
+    [Se.Is Beam.id $ Se.Eq (Kernel.Types.Id.getId id)]
 
 findByPrimaryKey :: (EsqDBFlow m r, MonadFlow m, CacheFlow m r) => (Kernel.Types.Id.Id Domain.Types.TripTransaction.TripTransaction -> m (Maybe Domain.Types.TripTransaction.TripTransaction))
 findByPrimaryKey id = do findOneWithKV [Se.And [Se.Is Beam.id $ Se.Eq (Kernel.Types.Id.getId id)]]
@@ -37,6 +73,8 @@ updateByPrimaryKey (Domain.Types.TripTransaction.TripTransaction {..}) = do
       Se.Set Beam.endStopCode endStopCode,
       Se.Set Beam.fleetOwnerId (Kernel.Types.Id.getId fleetOwnerId),
       Se.Set Beam.isCurrentlyDeviated isCurrentlyDeviated,
+      Se.Set Beam.routeCode routeCode,
+      Se.Set Beam.sequenceNumber sequenceNumber,
       Se.Set Beam.startLocationLat (Kernel.Prelude.fmap (.lat) startLocation),
       Se.Set Beam.startLocationLon (Kernel.Prelude.fmap (.lon) startLocation),
       Se.Set Beam.startedNearStopCode startedNearStopCode,
@@ -63,6 +101,8 @@ instance FromTType' Beam.TripTransaction Domain.Types.TripTransaction.TripTransa
             fleetOwnerId = Kernel.Types.Id.Id fleetOwnerId,
             id = Kernel.Types.Id.Id id,
             isCurrentlyDeviated = isCurrentlyDeviated,
+            routeCode = routeCode,
+            sequenceNumber = sequenceNumber,
             startLocation = Storage.Queries.Transformers.Ride.mkLatLong startLocationLat startLocationLon,
             startedNearStopCode = startedNearStopCode,
             status = status,
@@ -86,6 +126,8 @@ instance ToTType' Beam.TripTransaction Domain.Types.TripTransaction.TripTransact
         Beam.fleetOwnerId = Kernel.Types.Id.getId fleetOwnerId,
         Beam.id = Kernel.Types.Id.getId id,
         Beam.isCurrentlyDeviated = isCurrentlyDeviated,
+        Beam.routeCode = routeCode,
+        Beam.sequenceNumber = sequenceNumber,
         Beam.startLocationLat = Kernel.Prelude.fmap (.lat) startLocation,
         Beam.startLocationLon = Kernel.Prelude.fmap (.lon) startLocation,
         Beam.startedNearStopCode = startedNearStopCode,

@@ -21,6 +21,12 @@ create = createWithKV
 createMany :: (EsqDBFlow m r, MonadFlow m, CacheFlow m r) => ([Domain.Types.VehicleRouteMapping.VehicleRouteMapping] -> m ())
 createMany = traverse_ create
 
+findAllRouteMappings :: (EsqDBFlow m r, MonadFlow m, CacheFlow m r) => (Data.Text.Text -> m ([Domain.Types.VehicleRouteMapping.VehicleRouteMapping]))
+findAllRouteMappings vehicleNumber = do findAllWithKV [Se.Is Beam.vehicleNumber $ Se.Eq vehicleNumber]
+
+findOneMapping :: (EsqDBFlow m r, MonadFlow m, CacheFlow m r) => (Data.Text.Text -> Data.Text.Text -> m (Maybe Domain.Types.VehicleRouteMapping.VehicleRouteMapping))
+findOneMapping vehicleNumber routeCode = do findOneWithKV [Se.And [Se.Is Beam.vehicleNumber $ Se.Eq vehicleNumber, Se.Is Beam.routeCode $ Se.Eq routeCode]]
+
 findByPrimaryKey :: (EsqDBFlow m r, MonadFlow m, CacheFlow m r) => (Data.Text.Text -> Data.Text.Text -> m (Maybe Domain.Types.VehicleRouteMapping.VehicleRouteMapping))
 findByPrimaryKey routeCode vehicleNumber = do findOneWithKV [Se.And [Se.Is Beam.routeCode $ Se.Eq routeCode, Se.Is Beam.vehicleNumber $ Se.Eq vehicleNumber]]
 

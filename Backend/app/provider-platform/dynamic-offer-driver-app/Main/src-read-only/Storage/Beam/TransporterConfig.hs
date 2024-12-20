@@ -112,6 +112,7 @@ data TransporterConfigT f = TransporterConfigT
     enableFaceVerification :: B.C f Kernel.Prelude.Bool,
     enableTollCrossedNotifications :: B.C f Kernel.Prelude.Bool,
     enableUdfForOffers :: B.C f Kernel.Prelude.Bool,
+    endRideDistanceThreshold :: B.C f (Kernel.Prelude.Maybe Kernel.Prelude.Double),
     exotelAppIdMapping :: B.C f (Kernel.Prelude.Maybe Domain.Types.Extra.TransporterConfig.ExotelMapping),
     exotelStatusCheckSchedulerDelay :: B.C f (Kernel.Prelude.Maybe Kernel.Types.Common.Seconds),
     fakeOtpEmails :: B.C f [Kernel.Prelude.Text],

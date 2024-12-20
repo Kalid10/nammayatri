@@ -25,11 +25,11 @@ data LlmPromptD (s :: UsageSafety) = LlmPrompt
   }
   deriving (Generic, Show)
 
-data PromptKey = DriverProfileGen_1 deriving (Eq, Ord, Show, Read, Generic, ToJSON, FromJSON, ToSchema)
+data PromptKey = AzureOpenAI_DriverProfileGen_1 deriving (Eq, Ord, Show, Read, Generic, ToJSON, FromJSON, ToSchema)
 
 data UseCase = DriverProfileGen | DriverSupport deriving (Eq, Ord, Show, Read, Generic, ToJSON, FromJSON, ToSchema)
 
-type LlmPrompt = LlmPromptD 'Safe
+type LlmPrompt = LlmPromptD ('Safe)
 
 instance FromJSON (LlmPromptD 'Unsafe)
 
@@ -39,6 +39,6 @@ instance FromJSON (LlmPromptD 'Safe)
 
 instance ToJSON (LlmPromptD 'Safe)
 
-$(Tools.Beam.UtilsTH.mkBeamInstancesForEnumAndList ''PromptKey)
+$(Tools.Beam.UtilsTH.mkBeamInstancesForEnumAndList (''PromptKey))
 
-$(Tools.Beam.UtilsTH.mkBeamInstancesForEnumAndList ''UseCase)
+$(Tools.Beam.UtilsTH.mkBeamInstancesForEnumAndList (''UseCase))
