@@ -15,16 +15,18 @@ import qualified Kernel.Prelude
 import Tools.Beam.UtilsTH
 
 data DriverRequestT f = DriverRequestT
-  { description :: (B.C f (Kernel.Prelude.Maybe Data.Text.Text)),
-    id :: (B.C f Data.Text.Text),
-    reason :: (B.C f (Kernel.Prelude.Maybe Data.Text.Text)),
-    requestType :: (B.C f Data.Text.Text),
-    status :: (B.C f (Kernel.Prelude.Maybe Domain.Types.DriverRequest.RequestStatus)),
-    tripTransactionId :: (B.C f Data.Text.Text),
-    merchantId :: (B.C f (Kernel.Prelude.Maybe (Data.Text.Text))),
-    merchantOperatingCityId :: (B.C f (Kernel.Prelude.Maybe (Data.Text.Text))),
-    createdAt :: (B.C f Kernel.Prelude.UTCTime),
-    updatedAt :: (B.C f Kernel.Prelude.UTCTime)
+  { description :: B.C f (Kernel.Prelude.Maybe Data.Text.Text),
+    id :: B.C f Data.Text.Text,
+    reason :: B.C f (Kernel.Prelude.Maybe Data.Text.Text),
+    requestType :: B.C f Domain.Types.DriverRequest.RequestType,
+    requesteeId :: B.C f Data.Text.Text,
+    requestorId :: B.C f Data.Text.Text,
+    status :: B.C f (Kernel.Prelude.Maybe Domain.Types.DriverRequest.RequestStatus),
+    tripTransactionId :: B.C f Data.Text.Text,
+    merchantId :: B.C f (Kernel.Prelude.Maybe Data.Text.Text),
+    merchantOperatingCityId :: B.C f (Kernel.Prelude.Maybe Data.Text.Text),
+    createdAt :: B.C f Kernel.Prelude.UTCTime,
+    updatedAt :: B.C f Kernel.Prelude.UTCTime
   }
   deriving (Generic, B.Beamable)
 
@@ -34,6 +36,6 @@ instance B.Table DriverRequestT where
 
 type DriverRequest = DriverRequestT Identity
 
-$(enableKVPG (''DriverRequestT) [('id)] [])
+$(enableKVPG ''DriverRequestT ['id] [])
 
-$(mkTableInstances (''DriverRequestT) "driver_request")
+$(mkTableInstances ''DriverRequestT "driver_request")

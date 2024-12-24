@@ -6,8 +6,6 @@ imports:
   MerchantOperatingCity: Domain.Types.MerchantOperatingCity
   Person: Domain.Types.Person
 
-
-
 VehicleRouteMapping:
   tableName: vehicle_route_mapping
 
@@ -75,11 +73,18 @@ DriverRequest:
 
   types:
     RequestStatus:
-      enum: "ACCEPTED, REJECTED"
+      - enum: "APPROVED, REJECTED, REVOKED"
+      - derive': "Show, Eq, Ord, Read, Generic, ToJSON, FromJSON, ToSchema, Kernel.Prelude.ToParamSchema"
+
+    RequestType:
+      - enum: "END_RIDE, CHANGE_ROUTE"
+      - derive': "Show, Eq, Ord, Read, Generic, ToJSON, FromJSON, ToSchema, Kernel.Prelude.ToParamSchema"
 
   fields:
     id: Id DriverRequest
-    requestType: Text
+    requestorId: Id Person
+    requesteeId: Id Person
+    requestType: RequestType
     description: Maybe Text
     tripTransactionId : Id TripTransaction
     status: Maybe RequestStatus
@@ -87,6 +92,26 @@ DriverRequest:
 
   constraints:
     id: PrimaryKey
+
+  queries:
+    updateStatusWithReason:
+      kvFunction: updateOneWithKV
+      params: [status, reason]
+      where: id
+
+    findByTripReqAndStatus:
+      kvFunction: findOneWithKV
+      where:
+        and: [tripTransactionId, requestType, status]
+
+  domainInstance:
+    - Custom Kernel.Beam.Lib.UtilsTH.mkBeamInstancesForEnum <RequestType>
+    - Custom Kernel.Beam.Lib.UtilsTH.mkBeamInstancesForEnum <RequestStatus>
+    - Custom Kernel.Utils.TH.mkFromHttpInstanceForEnum <RequestType>
+    - Custom Kernel.Utils.TH.mkFromHttpInstanceForEnum <RequestStatus>
+
+  extraOperations:
+    - EXTRA_QUERY_FILE
 
 
 
