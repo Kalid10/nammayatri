@@ -458,6 +458,7 @@ enableDriver merchantShortId opCity reqDriverId = do
     throwError (InvalidRequest "Can't enable driver if no vehicle or no RCs or no DL are linked to them")
 
   enableAndTriggerOnboardingAlertsAndMessages merchantOpCityId driverId False
+  QDriverInfo.updateOnboardingVehicleCategory (mVehicle >>= (.category)) driverId
   logTagInfo "dashboard -> enableDriver : " (show personId)
   fork "sending dashboard sms - onboarding" $ do
     Sms.sendDashboardSms merchant.id merchantOpCityId Sms.ONBOARDING Nothing personId Nothing 0

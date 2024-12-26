@@ -50,6 +50,9 @@ library
       API.Types.ProviderPlatform.Fleet
       API.Types.ProviderPlatform.Fleet.Driver
       API.Types.ProviderPlatform.Fleet.Endpoints.Driver
+      API.Types.ProviderPlatform.Internal
+      API.Types.ProviderPlatform.Internal.Auth
+      API.Types.ProviderPlatform.Internal.Endpoints.Auth
       API.Types.ProviderPlatform.Management
       API.Types.ProviderPlatform.Management.Booking
       API.Types.ProviderPlatform.Management.Driver

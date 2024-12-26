@@ -1,0 +1,23 @@
+imports:
+  Driver: Dashboard.Common
+  Merchant: Dashboard.Common
+  MerchantOperatingCity: Dashboard.Common
+  RegToken: Kernel.Types.App
+
+module: Auth
+
+types:
+  InternalResp:
+    driverId: Id Driver
+    merchantId: Id Merchant
+    merchantOperatingCityId: Id MerchantOperatingCity
+
+apis:
+  - GET:
+      endpoint: /internal/auth
+      auth: NoAuth
+      headers:
+        token: RegToken
+        api-key: Text
+      response:
+        type: InternalResp
