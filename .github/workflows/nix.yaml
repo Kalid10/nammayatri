@@ -17,7 +17,6 @@ jobs:
   process-labels:
     runs-on: ubuntu-latest
     # Skip this job for PR close events without merge
-    if: github.event.pull_request.merged == true || github.event_name != 'pull_request' || github.event.action != 'closed'
     outputs:
       has-backend: ${{ steps.check-labels.outputs.has_backend }}
     steps:
@@ -46,12 +45,9 @@ jobs:
   build:
     strategy:
       matrix:
-        system: [x86_64-linux, aarch64-darwin]
+        system: [x86_64-linux]
     needs: [process-labels]
     runs-on: ${{ matrix.system }}
-    if: |
-      needs.process-labels.outputs.has-backend == 'true' && 
-      (github.event_name != 'pull_request' || github.event.pull_request.merged == true || github.event.action != 'closed')
     outputs:
       docker-image-name: ${{ steps.docker.outputs.image_name }}
     steps:
@@ -62,21 +58,11 @@ jobs:
 
       - name: Docker tasks
         id: docker
-        if: |
-          matrix.system == 'x86_64-linux' && (
-          github.ref == 'refs/heads/main' || 
-          github.ref == 'refs/heads/prodHotPush-Common' || 
-          github.event.pull_request.merged == true)
         run: |
           nix build .#dockerImage -o docker-image.tgz
           echo "image_name=$(nix eval --raw .#dockerImage.imageName):$(nix eval --raw .#dockerImage.imageTag)" >> $GITHUB_OUTPUT
       
       - name: Upload Docker image tarball
-        if: |
-          matrix.system == 'x86_64-linux' && (
-          github.ref == 'refs/heads/main' || 
-          github.ref == 'refs/heads/prodHotPush-Common' || 
-          github.event.pull_request.merged == true)
         uses: actions/upload-artifact@v4
         with:
           name: docker-image
@@ -88,7 +74,6 @@ jobs:
   macos-build-for-cache:
     runs-on: ${{ matrix.host }}
     needs: [build, process-labels]
-    if: github.ref == 'refs/heads/main'
     strategy:
       matrix:
         system: [aarch64-darwin]
@@ -102,9 +87,6 @@ jobs:
   push-docker:
     needs: [build, process-labels]
     runs-on: ubuntu-latest
-    if: |
-      (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/prodHotPush-Common' || github.event.pull_request.merged == true) && 
-      needs.process-labels.outputs.has-backend == 'true'
     steps:
       - name: Download Docker image tarball
         uses: actions/download-artifact@v4

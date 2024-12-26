@@ -35,6 +35,7 @@ import qualified "rider-app" Tools.Event as TE
 
 updateCustomerStats :: E.Event TE.Payload -> Text -> Flow ()
 updateCustomerStats event _ = do
+  logInfo "Reached inside updateCustomerStats"
   whenJust event.personId $ \pId -> do
     when (event.service == RIDER_APP && (event.eventType == RideEnded || event.eventType == BookingCancelled)) do
       let personId = Id pId
@@ -58,6 +59,7 @@ updateCustomerStats event _ = do
           whenJust (event.payload) $ \payload -> do
             maxTimevalue :: (Maybe UTCTime) <- Hedis.get (personRedisKey personId)
             unless (isNotBackfilled personStats) do
+              logDebug "Inside no backfill required log part"
               let eventCreatedAt = payload.cAt
               now <- getCurrentTime
               if isJust maxTimevalue && (diffUTCTime (fromMaybe now maxTimevalue) eventCreatedAt > 0)
