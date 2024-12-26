@@ -2411,8 +2411,8 @@ homeScreenFlow = do
             { props
               { sourceLat = if state.props.isSource == Just true then lat else state.props.sourceLat
               , sourceLong = if state.props.isSource == Just true then lon else state.props.sourceLong
-              , destinationLat = if state.props.isSource == Just true then state.props.destinationLat else lat
-              , destinationLong = if state.props.isSource == Just true then state.props.destinationLong else lon
+              , destinationLat = if state.props.isSource == Just true && state.data.fareProductType == FPT.DELIVERY then state.props.destinationLat else lat
+              , destinationLong = if state.props.isSource == Just true && state.data.fareProductType == FPT.DELIVERY then state.props.destinationLong else lon
               , editedPickUpLocation {gps = LatLong {lat : lat
                                               , lon : lon
                                               }
@@ -2882,6 +2882,8 @@ findEstimates updatedState = do
   let
     state = globalState.homeScreen
   liftFlowBT $ logEventWithTwoParams logField_ "ny_user_source_and_destination" "ny_user_enter_source" (take 99 (state.data.source)) "ny_user_enter_destination" (take 99 (state.data.destination))
+  liftFlowBT $ logEventWithTwoParams logField_ "ny_user_sourceLat_sourceLong" "ny_user_sourcelat" (show state.props.sourceLat) "ny_ic_sourcelong" (show state.props.sourceLong)
+  liftFlowBT $ logEventWithTwoParams logField_ "ny_user_destinationLat_destinationLong" "ny_user_sdestinationlat" (show state.props.destinationLat) "ny_ic_destinationlong" (show state.props.destinationLong)
   (ServiceabilityRes sourceServiceabilityResp) <- Remote.locServiceabilityBT (Remote.makeServiceabilityReq state.props.sourceLat state.props.sourceLong) ORIGIN
   if (not sourceServiceabilityResp.serviceable) then do
     updateLocalStage SearchLocationModel
