@@ -34,12 +34,14 @@ import qualified Kafka.Consumer as Consumer
 import Kernel.Prelude
 import Kernel.Types.Flow
 import Kernel.Utils.Common hiding (id)
+import Kernel.Utils.IOLogging
 import qualified Streamly.Internal.Data.Fold as SF
 import qualified Streamly.Internal.Data.Stream.IsStream as S
 import Streamly.Internal.Data.Stream.Serial (SerialT)
 
 runConsumer :: L.FlowRuntime -> AppEnv -> ConsumerType -> Consumer.KafkaConsumer -> IO ()
 runConsumer flowRt appEnv consumerType kafkaConsumer = do
+  logOutputIO appEnv.loggerEnv INFO "Reached function runConsumer"
   case consumerType of
     AVAILABILITY_TIME -> availabilityConsumer flowRt appEnv kafkaConsumer
     BROADCAST_MESSAGE -> broadcastMessageConsumer flowRt appEnv kafkaConsumer
@@ -48,12 +50,13 @@ runConsumer flowRt appEnv consumerType kafkaConsumer = do
 
 updateCustomerStatsConsumer :: L.FlowRuntime -> AppEnv -> Consumer.KafkaConsumer -> IO ()
 updateCustomerStatsConsumer flowRt appEnv kafkaConsumer = do
+  logOutputIO appEnv.loggerEnv INFO "Reached function updateCustomerStatsConsumer"
   forever $
     readMesssageWithWaitAndTimeRange kafkaConsumer appEnv
       & S.mapM updateCustomerStatsWithFlow
       & S.drain
   where
-    updateCustomerStatsWithFlow (eventPayload, personId, _) =
+    updateCustomerStatsWithFlow (eventPayload, personId, _) = do
       runFlowR flowRt appEnv . withLogTag ("updating-person-stats-personId:" <> personId) $
         generateGUID
           >>= flip withLogTag (PSProcessor.updateCustomerStats eventPayload personId)
@@ -167,12 +170,14 @@ readMesssageWithWaitAndTimeRange ::
   AppEnv ->
   SerialT IO (message, messageKey, ConsumerRecordD)
 readMesssageWithWaitAndTimeRange kafkaConsumer appEnv = do
+  liftIO $ logOutputIO appEnv.loggerEnv INFO "Reached function readMesssageWithWaitAndTimeRange"
   currentHour <- liftIO getCurrentHour
   let shouldPoll = maybe True (\(start, end) -> start <= currentHour && end > currentHour) timeRange
   if shouldPoll
     then do
       threadDelay $ batchDelayInMicroseconds appEnv.kafkaReadBatchDelay
       let eitherRecords = S.bracket (pure kafkaConsumer) Consumer.closeConsumer pollMessageR
+      liftIO $ logOutputIO appEnv.loggerEnv INFO "Consumed messages"
       let records = S.mapMaybe hush eitherRecords
       S.mapMaybe (removeMaybeFromTuple . decodeRecord) records
     else do

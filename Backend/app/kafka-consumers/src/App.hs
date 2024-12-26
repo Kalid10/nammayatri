@@ -36,6 +36,7 @@ import Kernel.Types.Flow (runFlowR)
 import Kernel.Utils.Common hiding (id)
 import Kernel.Utils.Dhall (readDhallConfigDefault)
 import qualified Kernel.Utils.FlowLogging as L
+import Kernel.Utils.IOLogging
 import qualified Kernel.Utils.Servant.Server as Server
 import Kernel.Utils.Shutdown
 import Network.Wai.Handler.Warp
@@ -49,11 +50,13 @@ startKafkaConsumer = do
   configFile <- CF.getConfigNameFromConsumertype consumerType
   appCfg :: AppCfg <- readDhallConfigDefault configFile
   appEnv <- buildAppEnv appCfg consumerType
+  logOutputIO appEnv.loggerEnv INFO "Reached function startKafkaConsumer"
   when (consumerType == LOCATION_UPDATE) (void $ forkIO $ runDriverHealthcheck appCfg appEnv)
   startConsumerWithEnv appCfg appEnv
 
 startConsumerWithEnv :: AppCfg -> AppEnv -> IO ()
 startConsumerWithEnv appCfg appEnv@AppEnv {..} = do
+  logOutputIO appEnv.loggerEnv INFO "Reached function startConsumerWithEnv"
   kafkaConsumer <- newKafkaConsumer
   let loggerRuntime = L.getEulerLoggerRuntime appEnv.hostname appEnv.loggerConfig
   R.withFlowRuntime (Just loggerRuntime) $ \flowRt' -> do
